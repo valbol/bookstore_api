@@ -16,7 +16,7 @@
     "skipLibCheck": true,
     "emitDecoratorMetadata": true,
     "forceConsistentCasingInFileNames": true,
-    "baseUrl": ".",
+    "baseUrl": "."
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts"]
 }
