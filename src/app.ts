@@ -1,5 +1,7 @@
 import express, { Application } from 'express';
 import cors from 'cors';
+import mongoDb from './db';
+import routes from './routes';
 
 const createApp = async () => {
   const app: Application = express();
@@ -20,6 +22,8 @@ const createApp = async () => {
   app.use(cors(corsOptions));
   app.use(express.json({ limit: '5mb' }));
   app.use(express.urlencoded({ limit: '5mb', extended: true }));
+  await mongoDb();
+  routes(app);
 
   return app;
 };
