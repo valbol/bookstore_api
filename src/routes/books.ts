@@ -4,8 +4,8 @@ import { bookService } from '../services';
 import { SearchQuery } from '../types/book';
 import { authenticateToken } from '../middleware/jwtMiddleware';
 import logger from '../logger';
+import { cacheMiddleware, clearCacheByKey } from '../middleware/cacheMiddleware';
 
-// TODO: add caching and auth middlewares
 const router = express.Router();
 
 router.get('/search', validateSearchQuery, async (req: Request, res: Response) => {
@@ -31,7 +31,7 @@ router.get('/search', validateSearchQuery, async (req: Request, res: Response) =
   }
 });
 
-router.post('/create', authenticateToken, validateBookInput, async (req: Request, res: Response) => {
+router.post('/create', authenticateToken, validateBookInput, clearCacheByKey, async (req: Request, res: Response) => {
   try {
     const newBook = req.body;
     const resp = await bookService.addBook(newBook);
@@ -43,21 +43,6 @@ router.post('/create', authenticateToken, validateBookInput, async (req: Request
   } catch (error) {
     logger.error('Create failed:', error);
     res.status(500).json({ success: false, error });
-  }
-});
-
-router.get('/', async (req: Request, res: Response) => {
-  try {
-    const result = await bookService.getAllBooks();
-
-    if (!result) {
-      res.status(404).json({ success: false, error: 'Book not found' });
-      return;
-    }
-
-    res.json({ success: true, data: result });
-  } catch (error) {
-    res.status(500).json({ success: false, error: (error as Error).message });
   }
 });
 
@@ -79,7 +64,22 @@ router.get('/:id', async (req: Request, res: Response) => {
   }
 });
 
-router.put('/:id', authenticateToken, validateBookUpdateInput, async (req: Request, res: Response) => {
+router.get('/', cacheMiddleware, async (req: Request, res: Response) => {
+  try {
+    const result = await bookService.getAllBooks();
+
+    if (!result) {
+      res.status(404).json({ success: false, error: 'Book not found' });
+      return;
+    }
+
+    res.json({ success: true, data: result });
+  } catch (error) {
+    res.status(500).json({ success: false, error: (error as Error).message });
+  }
+});
+
+router.put('/:id', authenticateToken, validateBookUpdateInput, clearCacheByKey, async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { title, description, author, publicationYear, genre } = req.body;
@@ -98,7 +98,7 @@ router.put('/:id', authenticateToken, validateBookUpdateInput, async (req: Reque
   }
 });
 
-router.delete('/:id', authenticateToken, async (req: Request, res: Response) => {
+router.delete('/:id', authenticateToken, clearCacheByKey, async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 

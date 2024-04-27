@@ -4,7 +4,6 @@ import logger from './logger';
 
 const initializeServer = async () => {
   dotenv.config();
-  console.log(process.env);
   const app = await createApp();
   const port = Number(process.env.SERVER_PORT) || 3000;
 

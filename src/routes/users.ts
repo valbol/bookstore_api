@@ -2,7 +2,6 @@ import express, { Request, Response } from 'express';
 import { validateUserCreation } from '../middleware/validationMiddleware';
 import { userService } from '../services';
 
-// TODO: add caching and auth middlewares
 const router = express.Router();
 
 router.post('/create', validateUserCreation, async (req: Request, res: Response) => {

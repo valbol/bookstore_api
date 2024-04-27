@@ -71,7 +71,6 @@ describe('Book Service', () => {
 
   describe('updateBook(id, payload)', () => {
     it('should update a book details', async () => {
-      console.log('updateBook');
       const book = await bookService.addBook({
         title: '1984',
         author: 'George Orwell',
@@ -80,7 +79,6 @@ describe('Book Service', () => {
         publicationYear: 1949,
         isLoaned: false,
       } as IBook);
-      console.log(book);
       const updatedBook = await bookService.updateBook(book._id.toString(), { title: 'New Title' });
 
       expect(updatedBook).to.not.be.null;
@@ -116,7 +114,6 @@ describe('Book Service', () => {
         publicationYear: 1949,
         isLoaned: false,
       } as IBook);
-      console.log(book);
       const result = await bookService.search({ genre: Genre.Drama });
 
       expect(result).to.have.lengthOf(1);

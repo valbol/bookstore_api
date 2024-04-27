@@ -13,4 +13,4 @@ const bookSchema = new Schema<IBook>({
 bookSchema.index({ author: 1, genre: 1 });
 bookSchema.index({ author: 1, publicationYear: 1 });
 
-export default mongoose.model<IBook>('Book', bookSchema);
+export default mongoose.model<IBook>('TabitBook', bookSchema);

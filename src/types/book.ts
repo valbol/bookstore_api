@@ -1,6 +1,3 @@
-import { Schema } from 'mongoose';
-import { IUser } from './user';
-
 export enum Genre {
   Drama = 'Drama',
   Action = 'Action',
