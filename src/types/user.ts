@@ -1,4 +1,4 @@
-import {   Types } from 'mongoose';
+import { Types } from 'mongoose';
 
 export enum UserRole {
   USER = 'User',
@@ -11,7 +11,7 @@ export interface IUser extends Document {
   email: string;
   password: string;
   role: UserRole;
-  loans:  Types.ObjectId[];
+  loans: Types.ObjectId[];
 }
 
 export interface UserJwt {

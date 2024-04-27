@@ -4,7 +4,7 @@ import { Loan, Book, User } from '../models';
 
 const DAYS_IN_MILISEC = 24 * 60 * 60 * 1000;
 
-export const createLoan = async (userId: string, bookId:string, loanPeriod:number) => {
+export const createLoan = async (userId: string, bookId: string, loanPeriod: number) => {
   const session = await mongoose.startSession();
   session.startTransaction();
 
@@ -28,7 +28,7 @@ export const createLoan = async (userId: string, bookId:string, loanPeriod:numbe
       loanDate,
       loanPeriod,
       returnDate,
-      returned: false
+      returned: false,
     });
 
     const savedLoan = await newLoan.save({ session });
@@ -42,16 +42,15 @@ export const createLoan = async (userId: string, bookId:string, loanPeriod:numbe
 
     return savedLoan;
   } catch (error) {
-
     await session.abortTransaction();
     session.endSession();
 
     logger.error('Failed to create loan:', error);
-    throw error;  
+    throw error;
   }
 };
 
-export const returnBook = async (userId:string, bookId:string) => {
+export const returnBook = async (userId: string, bookId: string) => {
   const session = await mongoose.startSession();
   try {
     session.startTransaction();
@@ -81,13 +80,17 @@ export const returnBook = async (userId:string, bookId:string) => {
     loan.returnDate = new Date();
     await loan.save({ session });
 
-    await User.findByIdAndUpdate(userId, {
-      $pull: { loans: loan._id }
-    }, { session });
+    await User.findByIdAndUpdate(
+      userId,
+      {
+        $pull: { loans: loan._id },
+      },
+      { session },
+    );
 
     await session.commitTransaction();
     session.endSession();
-    return { message: "Book returned successfully." };
+    return { message: 'Book returned successfully.' };
   } catch (error) {
     await session.abortTransaction();
     session.endSession();

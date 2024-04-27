@@ -54,11 +54,10 @@ export const validateUserCreation = (req: Request, res: Response, next: NextFunc
   next();
 };
 
-
 const searchQuerySchema = Joi.object({
   author: Joi.string().trim().optional(),
-  topic:  Joi.string().valid(Genre.Drama, Genre.Action, Genre.Romance, Genre.Horror).optional(),
-  year: Joi.number().integer().min(1900).max(new Date().getFullYear()).optional()
+  topic: Joi.string().valid(Genre.Drama, Genre.Action, Genre.Romance, Genre.Horror).optional(),
+  year: Joi.number().integer().min(1900).max(new Date().getFullYear()).optional(),
 }).or('author', 'topic', 'year');
 
 export const validateSearchQuery = (req: Request, res: Response, next: NextFunction) => {

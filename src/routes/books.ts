@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { validateBookInput, validateBookUpdateInput,validateSearchQuery } from '../middleware/validationMiddleware';
+import { validateBookInput, validateBookUpdateInput, validateSearchQuery } from '../middleware/validationMiddleware';
 import { bookService } from '../services';
 import { SearchQuery } from '../types/book';
 import { authenticateToken } from '../middleware/jwtMiddleware';
@@ -8,10 +8,10 @@ import logger from '../logger';
 // TODO: add caching and auth middlewares
 const router = express.Router();
 
-router.get('/search',validateSearchQuery, async (req: Request, res: Response) => {
+router.get('/search', validateSearchQuery, async (req: Request, res: Response) => {
   const { author, topic, year } = req.query;
 
-  let query: SearchQuery = {} ;
+  let query: SearchQuery = {};
   if (author) {
     query.author = author as string;
   }
@@ -31,7 +31,7 @@ router.get('/search',validateSearchQuery, async (req: Request, res: Response) =>
   }
 });
 
-router.post('/create',authenticateToken, validateBookInput,  async (req: Request, res: Response) => {
+router.post('/create', authenticateToken, validateBookInput, async (req: Request, res: Response) => {
   try {
     const newBook = req.body;
     const resp = await bookService.addBook(newBook);
@@ -64,7 +64,7 @@ router.get('/', async (req: Request, res: Response) => {
 router.get('/:id', async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-if(!id) return res.status(400).json({ success: false, error: 'Book id is required' });
+    if (!id) return res.status(400).json({ success: false, error: 'Book id is required' });
 
     const result = await bookService.getBook(id);
 
@@ -79,7 +79,7 @@ if(!id) return res.status(400).json({ success: false, error: 'Book id is require
   }
 });
 
-router.put('/:id',authenticateToken, validateBookUpdateInput, async (req: Request, res: Response) => {
+router.put('/:id', authenticateToken, validateBookUpdateInput, async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { title, description, author, publicationYear, genre } = req.body;
@@ -98,7 +98,7 @@ router.put('/:id',authenticateToken, validateBookUpdateInput, async (req: Reques
   }
 });
 
-router.delete('/:id',authenticateToken, async (req: Request, res: Response) => {
+router.delete('/:id', authenticateToken, async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 

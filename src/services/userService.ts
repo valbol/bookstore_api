@@ -16,7 +16,7 @@ export const create = async (newUser: IUser) => {
 
 export const get = async (email: string) => {
   try {
-    return await User.findOne({ email: email }).exec();
+    return User.findOne({ email: email }).exec();
   } catch (error) {
     logger.error('Failed to retrieve user:', error);
     throw error;
