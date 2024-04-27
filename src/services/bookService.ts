@@ -7,7 +7,7 @@ import { SearchQuery } from '../types/book';
 
 export const getAllBooks = async () => await Book.find().select('-_id');
 
-export const getBook = async (id: number) => await Book.findOne({ idNumber: id }).select('-_id');
+export const getBook = async (id: string) => await Book.findOne({ _id: id }).select('-_id');
 
 export const addBook = async (newBook: IBook) => {
   try {
@@ -23,8 +23,7 @@ export const updateBook = async (id: string, payload: Partial<IBook>): Promise<I
       logger.error(`Invalid book ID`);
       throw new Error('Invalid book ID');
     }
-
-    const updatedBook = await Book.findByIdAndUpdate(id, payload, { new: true });
+    const updatedBook = await Book.findByIdAndUpdate({_id: id}, payload, { new: true });
 
     return updatedBook;
   } catch (error) {
@@ -33,8 +32,17 @@ export const updateBook = async (id: string, payload: Partial<IBook>): Promise<I
   }
 };
 
-export const deleteBook = async (id: string) => await Book.findOneAndDelete({ _id: id }).select('-_id');
+export const deleteBook = async (id: string) =>  Book.findOneAndDelete({ _id: id }).select('-_id');
 
 export const search = async (query: SearchQuery) => {
-  await Book.find(query).select('-_id');
+  try{
+    const result = await Book.find(query).select('-_id');
+
+    return result;
+
+  }catch(error){
+    logger.error(`MongoDB connection error ${error}`);
+    throw error;
+  }
+
 };

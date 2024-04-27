@@ -1,16 +1,16 @@
 import express, { Request, Response } from 'express';
 import { validateUserCreation } from '../middleware/validationMiddleware';
-import { bookService } from '../services';
+import { userService } from '../services';
 
 // TODO: add caching and auth middlewares
 const router = express.Router();
 
 router.post('/create', validateUserCreation, async (req: Request, res: Response) => {
   try {
-    const newBook = req.body;
-    const resp = await bookService.addBook(newBook);
+    const newUser = req.body;
+    const resp = await userService.create(newUser);
     if (resp) {
-      res.status(201).json({ success: true, message: 'Book added successfully', data: newBook });
+      res.status(201).json({ success: true, message: 'User created successfully', data: resp });
     } else {
       res.status(401).json({ success: false, message: 'something went wrong' });
     }
@@ -19,14 +19,14 @@ router.post('/create', validateUserCreation, async (req: Request, res: Response)
   }
 });
 
-router.get('/:id', async (req: Request, res: Response) => {
+router.get('/:email', async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const { email } = req.params;
 
-    const result = await bookService.getBook(Number(id));
+    const result = await userService.get(email);
 
     if (!result) {
-      res.status(404).send({ success: false, error: 'Book not found' });
+      res.status(404).send({ success: false, error: 'User not found' });
       return;
     }
 

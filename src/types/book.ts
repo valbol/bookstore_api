@@ -13,10 +13,11 @@ export interface IBook extends Document {
   author: string;
   genre: Genre;
   publicationYear: number;
+  isLoaned: boolean;
 }
 
 export interface SearchQuery {
   author?: string;
   genre?: string;
-  year?: number;
+  publicationYear?: number;
 }
